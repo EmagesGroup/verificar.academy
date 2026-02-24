@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Verificación de Certificados | EMAGES ACADEMY</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+  font-family:"Segoe UI", Arial, sans-serif;
+  background:#f4f6f8;
+  margin:0;
+}
+
+.box{
+  max-width:760px;
+  margin:50px auto;
+  background:#fff;
+  padding:40px;
+  border-radius:12px;
+  box-shadow:0 12px 30px rgba(0,0,0,.08);
+  text-align:center;
+}
+
+.logo img{
+  max-width:110px;
+  margin-bottom:15px;
+}
+
+h1{
+  color:#0a3d62;
+  margin-bottom:5px;
+}
+
+.sub{
+  color:#555;
+  margin-bottom:25px;
+}
+
+input,button{
+  width:100%;
+  padding:14px;
+  font-size:16px;
+  margin-top:10px;
+  border-radius:6px;
+}
+
+input{
+  border:1px solid #ccc;
+}
+
+button{
+  background:#0a3d62;
+  color:#fff;
+  border:0;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+button:hover{background:#062f4f;}
+
+.participante{
+  margin-top:25px;
+  padding:18px;
+  background:#eef4fa;
+  border-radius:8px;
+  text-align:left;
+}
+
+.cert{
+  margin-top:18px;
+  padding:18px;
+  background:#f9fafc;
+  border-left:5px solid #0a3d62;
+  border-radius:8px;
+  text-align:left;
+}
+
+.cert h3{
+  margin:0 0 10px;
+  color:#0a3d62;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px 20px;
+  font-size:14px;
+}
+
+.sello{
+  margin-top:15px;
+  padding:12px;
+  background:#eafaf1;
+  border:1px solid #2ecc71;
+  border-radius:6px;
+  color:#1e8449;
+  font-size:14px;
+}
+
+a.btn{
+  display:inline-block;
+  margin-top:12px;
+  padding:10px 16px;
+  background:#0a3d62;
+  color:#fff;
+  border-radius:5px;
+  text-decoration:none;
+  font-size:14px;
+}
+
+.msg{
+  margin-top:20px;
+  color:#c0392b;
+  font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+  <div class="logo">
+    <img src="logo-gravia.png" alt="EMAGES ACADEMY">
+  </div>
+
+  <h1>Certificados EMAGES ACADEMY</h1>
+  <div class="sub">Plataforma oficial de verificación</div>
+
+  <input id="dni" placeholder="Ingrese DNI (opcional)">
+  <input id="codigo" placeholder="Ingrese código de certificado (opcional)">
+  <button onclick="buscar()">Verificar certificado</button>
+
+  <div id="resultado"></div>
+</div>
+
+<script>
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSmV-ladv2Gu74q_70lrv375kPXcn8v6hHTAv4iZdJ9mozkscUmNU9zaFRA3zI1ebhcm25sCP4TiUhD/pub?output=csv";
+
+async function buscar(){
+  const dni = document.getElementById("dni").value.trim();
+  const codigo = document.getElementById("codigo").value.trim();
+  const out = document.getElementById("resultado");
+  out.innerHTML = "";
+
+  if(!dni && !codigo){
+    out.innerHTML = "<div class='msg'>Ingrese DNI o código de certificado.</div>";
+    return;
+  }
+
+  const res = await fetch(CSV_URL);
+  const text = await res.text();
+  const filas = text.split("\n").slice(1);
+
+  let encontrados = [];
+
+  filas.forEach(fila=>{
+    const c = fila.split(",").map(x=>x.replace(/\"/g,"").trim());
+    if((dni && c[0]===dni) || (codigo && c[1]===codigo)){
+      encontrados.push(c);
+    }
+  });
+
+  if(encontrados.length===0){
+    out.innerHTML="<div class='msg'>No se encontró información válida.</div>";
+    return;
+  }
+
+  out.innerHTML = `
+    <div class="participante">
+      <strong>Participante:</strong> ${encontrados[0][5]} ${encontrados[0][4]}<br>
+      <strong>Certificados válidos encontrados:</strong> ${encontrados.length}
+    </div>
+  `;
+
+  encontrados.forEach(c=>{
+    out.innerHTML += `
+      <div class="cert">
+        <h3>${c[2]}</h3>
+        <div class="grid">
+          <div><strong>Código:</strong> ${c[1]}</div>
+          <div><strong>Horas:</strong> ${c[6]}</div>
+          <div><strong>Modalidad:</strong> ${c[7]}</div>
+          <div><strong>Fecha:</strong> ${c[8]}</div>
+        </div>
+
+        <div class="sello">
+          ✅ <strong>Certificado válido</strong><br>
+          Verificado en verificar.academy.emagesgroup.com<br>
+          Fecha de verificación: ${new Date().toLocaleDateString()}
+        </div>
+
+        <a class="btn" href="${c[10]}" target="_blank">⬇ Descargar certificado</a>
+      </div>
+    `;
+  });
+}
+</script>
+
+</body>
+</html>
