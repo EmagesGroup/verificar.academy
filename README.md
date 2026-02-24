@@ -1,2 +1,2 @@
 # verificar.academy
-Sistema oficial de verificación de certificados – GRAVIA | EMAGES GROUP
+Sistema oficial de verificación de certificados – EMAGES ACADEMY | EMAGES GROUP
