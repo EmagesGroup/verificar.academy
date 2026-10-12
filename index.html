@@ -1,200 +1,365 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Verificación de Certificados | EMAGES ACADEMY</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificación de Certificados | EMAGES Academy</title>
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff6b4a;
+            --primary-dark: #ff8c42;
+            --dark: #1a1a2e;
+            --dark-secondary: #16213e;
+            --light: #f8f9fa;
+            --white: #ffffff;
+            --success: #27ae60;
+            --text-gray: #7f8c8d;
+            --gradient: linear-gradient(135deg, #ff6b4a 0%, #ff8c42 100%);
+        }
 
-<style>
-body{
-  font-family:"Segoe UI", Arial, sans-serif;
-  background:#f4f6f8;
-  margin:0;
-}
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-.box{
-  max-width:760px;
-  margin:50px auto;
-  background:#fff;
-  padding:40px;
-  border-radius:12px;
-  box-shadow:0 12px 30px rgba(0,0,0,.08);
-  text-align:center;
-}
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--dark);
+            background-image: linear-gradient(135deg, rgba(26, 26, 46, 0.97) 0%, rgba(22, 33, 62, 0.97) 100%), url('assets/hero.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 40px 20px;
+        }
 
-.logo img{
-  max-width:110px;
-  margin-bottom:15px;
-}
+        .btn-volver {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            z-index: 100;
+            background: rgba(0,0,0,0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+        }
+        .btn-volver:hover { color: white; background: rgba(0,0,0,0.5); transform: translateX(-3px); }
 
-h1{
-  color:#0a3d62;
-  margin-bottom:5px;
-}
+        .verify-box {
+            max-width: 800px;
+            margin: 40px auto;
+            background: var(--white);
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            text-align: center;
+            animation: fadeInUp 0.6s ease;
+            flex: 1;
+        }
 
-.sub{
-  color:#555;
-  margin-bottom:25px;
-}
+        .logo-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+        .logo-header img { height: 45px; width: auto; }
+        .logo-header .texto { display: flex; flex-direction: column; text-align: left; }
+        .logo-header .marca { font-size: 1.4rem; font-weight: 800; color: var(--dark); line-height: 1; }
+        .logo-header .submarca { font-size: 0.7rem; color: var(--primary); letter-spacing: 2px; text-transform: uppercase; font-weight: 600; }
 
-input,button{
-  width:100%;
-  padding:14px;
-  font-size:16px;
-  margin-top:10px;
-  border-radius:6px;
-}
+        h1 { font-size: 1.8rem; color: var(--dark); margin-bottom: 8px; font-weight: 700; }
+        .sub { color: var(--text-gray); margin-bottom: 35px; font-size: 0.95rem; }
 
-input{
-  border:1px solid #ccc;
-}
+        .search-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .form-group { text-align: left; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--dark); margin-bottom: 6px; }
+        
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            background: var(--light);
+            transition: all 0.3s;
+        }
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--white);
+            box-shadow: 0 0 0 4px rgba(255, 107, 74, 0.1);
+        }
 
-button{
-  background:#0a3d62;
-  color:#fff;
-  border:0;
-  cursor:pointer;
-  font-weight:bold;
-}
+        .btn-search {
+            grid-column: 1 / -1;
+            padding: 16px;
+            background: var(--gradient);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 8px 25px rgba(255, 107, 74, 0.3);
+            margin-top: 10px;
+        }
+        .btn-search:hover { transform: translateY(-2px); box-shadow: 0 12px 35px rgba(255, 107, 74, 0.5); }
+        .btn-search:disabled { background: #bdc3c7; cursor: not-allowed; transform: none; box-shadow: none; }
 
-button:hover{background:#062f4f;}
+        /* RESULTADOS */
+        .participante {
+            margin-top: 30px;
+            padding: 20px;
+            background: #e8f4f8;
+            border-radius: 12px;
+            text-align: left;
+            border-left: 4px solid #3498db;
+            font-size: 1rem;
+            color: var(--dark);
+        }
+        .participante strong { color: var(--dark); }
 
-.participante{
-  margin-top:25px;
-  padding:18px;
-  background:#eef4fa;
-  border-radius:8px;
-  text-align:left;
-}
+        .cert {
+            margin-top: 20px;
+            padding: 25px;
+            background: var(--white);
+            border: 1px solid #e9ecef;
+            border-left: 5px solid var(--primary);
+            border-radius: 12px;
+            text-align: left;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            animation: fadeInUp 0.5s ease;
+        }
+        .cert h3 { margin: 0 0 15px; color: var(--dark); font-size: 1.2rem; }
 
-.cert{
-  margin-top:18px;
-  padding:18px;
-  background:#f9fafc;
-  border-left:5px solid #0a3d62;
-  border-radius:8px;
-  text-align:left;
-}
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px 20px;
+            font-size: 0.95rem;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        .grid strong { color: var(--dark); }
 
-.cert h3{
-  margin:0 0 10px;
-  color:#0a3d62;
-}
+        .sello {
+            margin-top: 15px;
+            padding: 15px;
+            background: #eafaf1;
+            border: 1px solid #2ecc71;
+            border-radius: 8px;
+            color: #1e8449;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:6px 20px;
-  font-size:14px;
-}
+        .btn-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+            padding: 12px 24px;
+            background: var(--dark);
+            color: white;
+            border-radius: 25px;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn-download:hover { background: var(--dark-secondary); transform: translateY(-2px); }
 
-.sello{
-  margin-top:15px;
-  padding:12px;
-  background:#eafaf1;
-  border:1px solid #2ecc71;
-  border-radius:6px;
-  color:#1e8449;
-  font-size:14px;
-}
+        .msg {
+            margin-top: 25px;
+            padding: 15px;
+            background: #fdf2f0;
+            border: 1px solid #f5b7b1;
+            color: #c0392b;
+            font-weight: 600;
+            border-radius: 8px;
+        }
 
-a.btn{
-  display:inline-block;
-  margin-top:12px;
-  padding:10px 16px;
-  background:#0a3d62;
-  color:#fff;
-  border-radius:5px;
-  text-decoration:none;
-  font-size:14px;
-}
+        footer {
+            text-align: center;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.85rem;
+            margin-top: 40px;
+            padding: 20px;
+        }
 
-.msg{
-  margin-top:20px;
-  color:#c0392b;
-  font-weight:bold;
-}
-</style>
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 600px) {
+            .verify-box { padding: 30px 20px; margin: 20px auto; }
+            .search-form { grid-template-columns: 1fr; }
+            .grid { grid-template-columns: 1fr; }
+            h1 { font-size: 1.5rem; }
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="box">
-  <div class="logo">
-    <img src="logo.png" alt="EMAGES ACADEMY">
-  </div>
+    <a href="https://academy.emagesgroup.com/" class="btn-volver">← Volver al inicio</a>
 
-  <h1>Certificados EMAGES ACADEMY</h1>
-  <div class="sub">Plataforma oficial de verificación</div>
+    <div class="verify-box">
+        <div class="logo-header">
+            <img src="assets/Pluma-sin-fondo.png" alt="EMAGES Academy">
+            <div class="texto">
+                <span class="marca">EMAGES Academy</span>
+                <span class="submarca">Verificación Oficial</span>
+            </div>
+        </div>
 
-  <input id="dni" placeholder="Ingrese DNI (opcional)">
-  <input id="codigo" placeholder="Ingrese código de certificado (opcional)">
-  <button onclick="buscar()">Verificar certificado</button>
+        <h1>Verificación de Certificados</h1>
+        <div class="sub">Plataforma oficial de validación de credenciales de EMAGES GROUP S.A.C.</div>
 
-  <div id="resultado"></div>
-</div>
+        <div class="search-form">
+            <div class="form-group">
+                <label for="dni">DNI del participante</label>
+                <input id="dni" type="text" placeholder="Ej: 70123456" maxlength="8" inputmode="numeric">
+            </div>
+            <div class="form-group">
+                <label for="codigo">Código de certificado</label>
+                <input id="codigo" type="text" placeholder="Ej: CERT-2024-001">
+            </div>
+            <button class="btn-search" id="btnBuscar" onclick="buscar()">🔍 Verificar certificado</button>
+        </div>
+
+        <div id="resultado"></div>
+    </div>
+
+    <footer>
+        <p>© 2026 EMAGES GROUP S.A.C. - RUC: 20611427671. Todos los derechos reservados.</p>
+    </footer>
 
 <script>
-const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSmV-ladv2Gu74q_70lrv375kPXcn8v6hHTAv4iZdJ9mozkscUmNU9zaFRA3zI1ebhcm25sCP4TiUhD/pub?output=csv";
+    // URL de tu Google Sheet publicado como CSV
+    const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSmV-ladv2Gu74q_70lrv375kPXcn8v6hHTAv4iZdJ9mozkscUmNU9zaFRA3zI1ebhcm25sCP4TiUhD/pub?output=csv";
 
-async function buscar(){
-  const dni = document.getElementById("dni").value.trim();
-  const codigo = document.getElementById("codigo").value.trim();
-  const out = document.getElementById("resultado");
-  out.innerHTML = "";
-
-  if(!dni && !codigo){
-    out.innerHTML = "<div class='msg'>Ingrese DNI o código de certificado.</div>";
-    return;
-  }
-
-  const res = await fetch(CSV_URL);
-  const text = await res.text();
-  const filas = text.split("\n").slice(1);
-
-  let encontrados = [];
-
-  filas.forEach(fila=>{
-    const c = fila.split(",").map(x=>x.replace(/\"/g,"").trim());
-    if((dni && c[0]===dni) || (codigo && c[1]===codigo)){
-      encontrados.push(c);
+    // Función robusta para parsear CSV (maneja comas dentro de las celdas entre comillas)
+    function parseCSVLine(line) {
+        const result = [];
+        let startValueIndex = 0;
+        let inQuotes = false;
+        for (let i = 0; i < line.length; i++) {
+            if (line[i] === '"') {
+                inQuotes = !inQuotes;
+            } else if (line[i] === ',' && !inQuotes) {
+                let val = line.substring(startValueIndex, i).replace(/^"|"$/g, '').trim();
+                result.push(val);
+                startValueIndex = i + 1;
+            }
+        }
+        result.push(line.substring(startValueIndex).replace(/^"|"$/g, '').trim());
+        return result;
     }
-  });
 
-  if(encontrados.length===0){
-    out.innerHTML="<div class='msg'>No se encontró información válida.</div>";
-    return;
-  }
+    async function buscar() {
+        const dniInput = document.getElementById("dni").value.trim();
+        const codigoInput = document.getElementById("codigo").value.trim();
+        const out = document.getElementById("resultado");
+        const btn = document.getElementById("btnBuscar");
 
-  out.innerHTML = `
-    <div class="participante">
-      <strong>Participante:</strong> ${encontrados[0][5]} ${encontrados[0][4]}<br>
-      <strong>Certificados válidos encontrados:</strong> ${encontrados.length}
-    </div>
-  `;
+        out.innerHTML = "";
 
-  encontrados.forEach(c=>{
-    out.innerHTML += `
-      <div class="cert">
-        <h3>${c[2]}</h3>
-        <div class="grid">
-          <div><strong>Código:</strong> ${c[1]}</div>
-          <div><strong>Horas:</strong> ${c[6]}</div>
-          <div><strong>Modalidad:</strong> ${c[7]}</div>
-          <div><strong>Fecha:</strong> ${c[8]}</div>
-        </div>
+        if (!dniInput && !codigoInput) {
+            out.innerHTML = "<div class='msg'>⚠️ Por favor, ingrese al menos el DNI o el código de certificado.</div>";
+            return;
+        }
 
-        <div class="sello">
-          ✅ <strong>Certificado válido</strong><br>
-          Verificado en verificar.academy.emagesgroup.com<br>
-          Fecha de verificación: ${new Date().toLocaleDateString()}
-        </div>
+        btn.disabled = true;
+        btn.textContent = "Buscando en la base de datos...";
 
-        <a class="btn" href="${c[10]}" target="_blank">⬇ Descargar certificado</a>
-      </div>
-    `;
-  });
-}
+        try {
+            const res = await fetch(CSV_URL);
+            const text = await res.text();
+            const filas = text.split("\n").slice(1); // Ignorar encabezado
+
+            let encontrados = [];
+
+            filas.forEach(fila => {
+                if (!fila.trim()) return;
+                const c = parseCSVLine(fila);
+                
+                // c[0]=DNI, c[1]=Código, c[2]=Curso, c[4]=Apellido, c[5]=Nombre, c[6]=Horas, c[7]=Modalidad, c[8]=Fecha, c[10]=Link
+                const matchDni = dniInput && c[0] === dniInput;
+                const matchCodigo = codigoInput && c[1].toLowerCase() === codigoInput.toLowerCase();
+
+                if (matchDni || matchCodigo) {
+                    encontrados.push(c);
+                }
+            });
+
+            if (encontrados.length === 0) {
+                out.innerHTML = "<div class='msg'>❌ No se encontró información válida con los datos proporcionados.</div>";
+            } else {
+                // Mostrar datos del participante (usamos el primer resultado para el nombre)
+                const primerRegistro = encontrados[0];
+                const nombreCompleto = `${primerRegistro[5]} ${primerRegistro[4]}`.trim();
+                
+                let html = `
+                    <div class="participante">
+                        <strong>👤 Participante:</strong> ${nombreCompleto || 'No especificado'}<br>
+                        <strong>📄 Certificados válidos encontrados:</strong> ${encontrados.length}
+                    </div>
+                `;
+
+                encontrados.forEach(c => {
+                    html += `
+                        <div class="cert">
+                            <h3>🎓 ${c[2] || 'Curso no especificado'}</h3>
+                            <div class="grid">
+                                <div><strong>Código:</strong> ${c[1]}</div>
+                                <div><strong>Horas lectivas:</strong> ${c[6]} hrs</div>
+                                <div><strong>Modalidad:</strong> ${c[7]}</div>
+                                <div><strong>Fecha de emisión:</strong> ${c[8]}</div>
+                            </div>
+
+                            <div class="sello">
+                                <span style="font-size: 1.5rem;">✅</span>
+                                <div>
+                                    <strong>Certificado Válido y Auténtico</strong><br>
+                                    Verificado en verificar.academy.emagesgroup.com<br>
+                                    Fecha de verificación: ${new Date().toLocaleDateString('es-PE')}
+                                </div>
+                            </div>
+
+                            ${c[10] ? `<a class="btn-download" href="${c[10]}" target="_blank">⬇ Descargar certificado PDF</a>` : ''}
+                        </div>
+                    `;
+                });
+
+                out.innerHTML = html;
+            }
+        } catch (error) {
+            console.error(error);
+            out.innerHTML = "<div class='msg'>❌ Error de conexión. Por favor, intente nuevamente más tarde.</div>";
+        } finally {
+            btn.disabled = false;
+            btn.textContent = "🔍 Verificar certificado";
+        }
+    }
 </script>
 
 </body>
